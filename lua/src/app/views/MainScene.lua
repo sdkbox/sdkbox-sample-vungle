@@ -18,26 +18,44 @@ function MainScene:onCreate()
 end
 
 function MainScene:setupTestMenu()
-    local label1 = cc.Label:createWithSystemFont("Test Item 1", "sans", 28)
-    local item1 = cc.MenuItemLabel:create(label1)
-    item1:onClicked(function()
-        print("Test Item 1")
+    cc.MenuItemFont:setFontName("sans")
+    local size = cc.Director:getInstance():getWinSize()
+
+    -- init plugin
+    sdkbox.PluginVungle:init()
+    sdkbox.PluginVungle:setListener(function(name, args)
+        if "onVungleCacheAvailable" == name then
+            print("onVungleCacheAvailable")
+        elseif "onVungleStarted" ==  name then
+            print("onVungleStarted")
+        elseif "onVungleFinished" ==  name then
+            print("onVungleFinished")
+        elseif "onVungleAdViewed" ==  name then
+            -- args = isComplete
+            local complete = "complete"
+            if not args then
+                complete = "not complete"
+            end
+            printf("onVungleAdViewed: %s", complete)
+        elseif "onVungleAdReward" ==  name then
+            -- args = name
+            printf("onVungleAdReward: %s", tostring(args))
+        end
     end)
 
-    local label2 = cc.Label:createWithSystemFont("Test Item 2", "sans", 28)
-    local item2 = cc.MenuItemLabel:create(label2)
-    item2:onClicked(function()
-        print("Test Item 2")
-    end)
+    local menu = cc.Menu:create(
+        cc.MenuItemFont:create("show video"):onClicked(function()
+            sdkbox.PluginVungle:show("video")
+            print("sdkbox.PluginVungle:show(\"video\")")
+        end),
+        cc.MenuItemFont:create("show reward"):onClicked(function()
+            sdkbox.PluginVungle:show("reward")
+            print("sdkbox.PluginVungle:show(\"reward\")")
+        end)
+    )
 
-    local label3 = cc.Label:createWithSystemFont("Test Item 3", "sans", 28)
-    local item3 = cc.MenuItemLabel:create(label3)
-    item3:onClicked(function()
-        print("Test Item 3")
-    end)
-
-    local menu = cc.Menu:create(item1, item2, item3)
-    menu:alignItemsVerticallyWithPadding(24)
+    menu:alignItemsVerticallyWithPadding(5)
+    menu:setPosition(size.width/2, size.height/2)
     self:addChild(menu)
 end
 

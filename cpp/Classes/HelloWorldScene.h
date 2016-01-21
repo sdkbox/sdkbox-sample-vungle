@@ -2,8 +2,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "PluginVungle/PluginVungle.h"
 
-class HelloWorld : public cocos2d::Layer
+class HelloWorld : public cocos2d::Layer, public sdkbox::VungleListener
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -18,6 +19,14 @@ public:
 private:
     void createTestMenu();
 
+    void onShowVideo(cocos2d::Ref* sender);
+    void onShowReward(cocos2d::Ref* sender);
+    
+    void onVungleCacheAvailable();
+    void onVungleStarted();
+    void onVungleFinished();
+    void onVungleAdViewed(bool isComplete);
+    void onVungleAdReward(const std::string& name);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

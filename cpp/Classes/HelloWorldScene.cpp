@@ -1,5 +1,6 @@
 
 #include "HelloWorldScene.h"
+#include "PluginVungle/PluginVungle.h"
 
 USING_NS_CC;
 
@@ -56,21 +57,58 @@ bool HelloWorld::init()
 
 void HelloWorld::createTestMenu()
 {
-    auto menu = Menu::create();
+    MenuItemFont::setFontName("sans");
+    Size size = Director::getInstance()->getWinSize();
 
-    menu->addChild(MenuItemLabel::create(Label::createWithSystemFont("Test Item 1", "sans", 24), [](Ref*){
-        CCLOG("Test Item 1");
-    }));
+    sdkbox::PluginVungle::setListener(this);
+    sdkbox::PluginVungle::setDebug(true);
 
-    menu->addChild(MenuItemLabel::create(Label::createWithSystemFont("Test Item 2", "sans", 24), [](Ref*){
-        CCLOG("Test Item 2");
-    }));
+    auto menu = Menu::create(MenuItemFont::create("show video", CC_CALLBACK_1(HelloWorld::onShowVideo, this)),
+                             MenuItemFont::create("show reward", CC_CALLBACK_1(HelloWorld::onShowReward, this)),
+                             NULL);
 
-    menu->addChild(MenuItemLabel::create(Label::createWithSystemFont("Test Item 3", "sans", 24), [](Ref*){
-        CCLOG("Test Item 3");
-    }));
-
-    menu->alignItemsVerticallyWithPadding(10);
+    menu->alignItemsVerticallyWithPadding(5);
+    menu->setPosition(Vec2(size.width/2, size.height/2));
     addChild(menu);
 }
 
+void HelloWorld::onShowVideo(cocos2d::Ref* sender)
+{
+    sdkbox::PluginVungle::show("video");
+    CCLOG("sdkbox::PluginVungle::show(\"video\")");
+}
+
+void HelloWorld::onShowReward(cocos2d::Ref* sender)
+{
+    sdkbox::PluginVungle::show("reward");
+    CCLOG("sdkbox::PluginVungle::show(\"reward\")");
+}
+
+void HelloWorld::onVungleCacheAvailable()
+{
+    CCLOG("onVungleCacheAvailable");
+}
+
+void HelloWorld::onVungleStarted()
+{
+    CCLOG("onVungleStarted");
+}
+
+void HelloWorld::onVungleFinished()
+{
+    CCLOG("onVungleFinished");
+}
+
+void HelloWorld::onVungleAdViewed(bool isComplete)
+{
+    cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+        CCLOG("onVungleAdViewed: %s", isComplete ? "complete" : "not complete");
+    });
+}
+
+void HelloWorld::onVungleAdReward(const std::string& name)
+{
+    cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+        CCLOG("onVungleAdReward: %s", name.c_str());
+    });
+}

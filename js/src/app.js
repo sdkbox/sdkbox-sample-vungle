@@ -31,23 +31,43 @@ var HelloWorldLayer = cc.Layer.extend({
     },
 
     createTestMenu:function() {
-        var item1 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 1", "sans", 28), function() {
-            cc.log("Test Item 1");
-        });
+        cc.MenuItemFont.setFontName("sans");
+        var size = cc.Director.getInstance().getWinSize();
 
-        var item2 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 2", "sans", 28), function() {
-            cc.log("Test Item 2");
-        });
+        // init plugin
+        sdkbox.PluginVungle.init();
+        sdkbox.PluginVungle.setListener({
+            onVungleCacheAvailable : function() {
+                cc.log("onVungleCacheAvailable");
+            },
+            onVungleStarted : function() {
+                cc.log("onVungleStarted");
+            },
+            onVungleFinished : function() {
+                cc.log("onVungleFinished");
+            },
+            onVungleAdViewed : function(isComplete) {
+                cc.log("onVungleAdViewed" + isComplete.toString());
+            },
+            onVungleAdReward : function(name) {
+                cc.log("reward received:" + name);
+            }
+        })
 
-        var item3 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 3", "sans", 28), function() {
-            cc.log("Test Item 3");
-        });
+        var menu = new cc.Menu(
+            new cc.MenuItemFont("show video", function() {
+                sdkbox.PluginVungle.show("video");
+                cc.log("sdkbox.PluginVungle.show(\"video\")");
+            }),
+            new cc.MenuItemFont("show reward", function() {
+                sdkbox.PluginVungle.show("reward");
+                cc.log("sdkbox.PluginVungle.show(\"reward\")");
+            })
+        );
 
-        var winsize = cc.winSize;
-        var menu = new cc.Menu(item1, item2, item3);
-        menu.x = winsize.width / 2;
-        menu.y = winsize.height / 2;
-        menu.alignItemsVerticallyWithPadding(20);
+        menu.alignItemsVerticallyWithPadding(5);
+        menu.x = size.width/2;
+        menu.y = size.height/2;
         this.addChild(menu);
     }
 });
