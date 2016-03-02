@@ -70,6 +70,11 @@ void HelloWorld::createTestMenu()
     menu->alignItemsVerticallyWithPadding(5);
     menu->setPosition(Vec2(size.width/2, size.height/2));
     addChild(menu);
+
+    _coin = 0;
+    _coinLabel = Label::createWithSystemFont("0", "sans", 32);
+    _coinLabel->setPosition(Vec2(size.width / 2, size.height - 80));
+    addChild(_coinLabel);
 }
 
 void HelloWorld::onShowVideo(cocos2d::Ref* sender)
@@ -106,9 +111,18 @@ void HelloWorld::onVungleAdViewed(bool isComplete)
     });
 }
 
+template < typename T > std::string to_string( const T& n )
+{
+    std::ostringstream stm ;
+    stm << n ;
+    return stm.str() ;
+}
+
 void HelloWorld::onVungleAdReward(const std::string& name)
 {
     cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
         CCLOG("onVungleAdReward: %s", name.c_str());
     });
+    _coin++;
+    _coinLabel->setString(to_string(_coin));
 }

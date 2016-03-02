@@ -34,6 +34,12 @@ var HelloWorldLayer = cc.Layer.extend({
         cc.MenuItemFont.setFontName("sans");
         var size = cc.Director.getInstance().getWinSize();
 
+        var coin = 0;
+        var coinLabel = cc.LabelTTF.create("0", "sans", 32);
+        coinLabel.x = size.width / 2;
+        coinLabel.y = size.height - 80;
+        this.addChild(coinLabel);
+
         // init plugin
         sdkbox.PluginVungle.init();
         sdkbox.PluginVungle.setListener({
@@ -51,6 +57,8 @@ var HelloWorldLayer = cc.Layer.extend({
             },
             onVungleAdReward : function(name) {
                 cc.log("reward received:" + name);
+                coin++;
+                coinLabel.setString(coin.toString());
             }
         })
 

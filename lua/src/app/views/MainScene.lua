@@ -21,6 +21,11 @@ function MainScene:setupTestMenu()
     cc.MenuItemFont:setFontName("sans")
     local size = cc.Director:getInstance():getWinSize()
 
+    local coin = 0
+    local coinLabel = cc.Label:createWithSystemFont("0", "sans", 32)
+    coinLabel:setPosition(size.width / 2, size.height - 80)
+    self:addChild(coinLabel)
+
     -- init plugin
     sdkbox.PluginVungle:init()
     sdkbox.PluginVungle:setListener(function(name, args)
@@ -40,6 +45,8 @@ function MainScene:setupTestMenu()
         elseif "onVungleAdReward" ==  name then
             -- args = name
             printf("onVungleAdReward: %s", tostring(args))
+            coin = coin + 1
+            coinLabel:setString(tostring(coin))
         end
     end)
 

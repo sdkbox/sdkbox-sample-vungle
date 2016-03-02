@@ -21,7 +21,10 @@ private:
 
     void onShowVideo(cocos2d::Ref* sender);
     void onShowReward(cocos2d::Ref* sender);
-    
+
+    int _coin;
+    cocos2d::Label *_coinLabel;
+
     void onVungleCacheAvailable();
     void onVungleStarted();
     void onVungleFinished();
