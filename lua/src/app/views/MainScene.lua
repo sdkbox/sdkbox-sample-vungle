@@ -27,7 +27,6 @@ function MainScene:setupTestMenu()
     self:addChild(coinLabel)
 
     -- init plugin
-    sdkbox.PluginVungle:init()
     sdkbox.PluginVungle:setListener(function(name, args)
         if "onVungleCacheAvailable" == name then
             print("onVungleCacheAvailable")
@@ -49,6 +48,7 @@ function MainScene:setupTestMenu()
             coinLabel:setString(tostring(coin))
         end
     end)
+    sdkbox.PluginVungle:init()
 
     local menu = cc.Menu:create(
         cc.MenuItemFont:create("show video"):onClicked(function()
